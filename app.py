@@ -12,6 +12,16 @@ app.secret_key = secrets.token_hex(16)
 def index(): #index o root o home page
     return render_template("index.html")
 
+#login
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+#formsignup
+@app.route('/formsignup')
+def register():
+    return render_template('formsignup.html')
+
 # not founded page
 
 @app.route('/item',methods=['GET','POST'])
