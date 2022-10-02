@@ -28,6 +28,10 @@ def register():
 def item(): #item page
     return render_template('item.html',error=None)
 
+@app.route('/registerProduct', methods=['GET','POST'])
+def product():
+    if request.method == 'GET':
+        return render_template('register_roducts.html')
 
 @app.errorhandler(404)
 def page_not_found(errorhandler):
