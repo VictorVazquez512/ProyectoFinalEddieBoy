@@ -28,11 +28,6 @@ def cursor():
 def index(): #index o root o home page
     return render_template("index.html")
 
-#login
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
 # not founded page
 @app.route('/item',methods=['GET','POST'])
 def item(): #item page
@@ -55,20 +50,20 @@ def registro():
 
         # Tratamos el formulario que viene del cliente
         email=request.form['email']
-        contraseña=request.form['password']
-        confirmarContraseña=request.form['ConfirmPassword']
+        password=request.form['password']
+        confirmarpassword=request.form['ConfirmPassword']
         # Verificar si existe el email
-        cur.execute('''SELECT * FROM usuario WHERE contraseña="%s" AND email="%s"'''%(contraseña, email))
-        row = cur.fetchone()
+        cur.execute('''SELECT * FROM usuario WHERE pass="%s" AND email="%s"'''%(password, email))
+        usuario = cur.fetchone()
         print(cur)
-        print(row)
-        if row == NULL:
+        print(usuario)
+        if usuario == NULL:
             return render_template('/registro_cliente.html',error="El correo electronico ya existe.")
-        if contraseña!=confirmarContraseña:
-            return render_template('/registro_cliente.html', error="Las contraseñas no coinciden")
+        if password!=confirmarpassword:
+            return render_template('/registro_cliente.html', error="Las passwords no coinciden")
         else:
-            cur.execute('''INSERT INTO usuario(email, contraseña, tipo) VALUES ("%s", "%s", "cliente")'''%(email, contraseña))
-            cur.execute('''SELECT * FROM usuario WHERE contraseña="%s" AND email="%s"'''%(contraseña, email))
+            cur.execute('''INSERT INTO usuario(email, pass, tipo) VALUES ("%s", "%s", "cliente")'''%(email, password))
+            cur.execute('''SELECT * FROM usuario WHERE pass="%s" AND email="%s"'''%(password, email))
             usuario = cur.fetchone()
             session['idUsuario'] = usuario[0]
             session['email'] = usuario[1]
@@ -80,30 +75,43 @@ def registro():
     else:
         return render_template('/registro_cliente.html')
 
-# @app.route('/login',methods=["GET","POST"])
-# def login():
-#     error=None
-#     if request.method == 'POST':
-#         email=request.form['correo']
-#         password=request.form['password']
+
+@app.route('/login',methods=["GET","POST"])
+def login():
+    error=None
+    if request.method == 'POST':
+        # extraemos los datos del formulario del request
+        email=request.form['email']
+        password=request.form['password']
+
+        # corroboramos si el email y el password no estan vacios
+        if email=="" or password=="":
+            return render_template('login.html',error="Ingresa un correo y/o una contraseña")
         
-#         row=bdEcommerce.buscarUnaLinea("usuario","email",email)
+        # hacemos conexion a la base de datos y recuperamos al usuario para ver si existe
+        cur = cursor()
+        cur.execute('''SELECT * FROM usuario WHERE pass="%s" AND email="%s"'''%(password, email))
+        usuario = cur.fetchone()
+
+        print("-------------------- USUARIO ---------------")
+        print(usuario)
         
-#         if email=="" or password=="":
-#             return render_template('login.html',error="Ingresa un correo y/o una contraseña")
-#         if len(row)==0:
-#             return render_template('login.html',error="Correo invalido")
-#         if (email in row[0]):
-#             if (password == row[0][2]):
-#                 session['email']=email
-#                 session['idUsuario']=row[0][0]
-#                 session['tipo']=row[0][3]
-#                 return redirect('/')
-#             else:
-#                 return render_template('login.html',error="Correo o contraseña incorrectos")     
-#         else:
-#             return render_template('login.html',error="Correo o contraseña incorrectos")
-#     return render_template('login.html')
+        
+        if usuario == None:
+            print('entramo al correo invalido pippin')
+            return render_template('login.html',error="Correo o contraseña invalidos")
+        elif (email in usuario):
+            if (password == usuario[2]):
+                print('si entramos al bellaqueo pippin')
+                session['email']=email
+                session['idUsuario']=usuario[0]
+                session['tipo']=usuario[3]
+                return redirect('/')
+            else:
+                return render_template('login.html',error="Correo o password contraseña")     
+        else:
+            return render_template('login.html',error="Correo o password contraseña")
+    return render_template('login.html')
 
 
 @app.errorhandler(404)
