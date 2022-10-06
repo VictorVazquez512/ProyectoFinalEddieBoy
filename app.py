@@ -33,10 +33,25 @@ def index(): #index o root o home page
 def item(): #item page
     return render_template('item.html',error=None)
 
-@app.route('/registerProduct', methods=['GET','POST'])
-def product():
-    if request.method == 'GET':
-        return render_template('register_roducts.html')
+@app.route('/registro_producto', methods=['GET','POST'])
+def registro_producto():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        sku = request.form['sku']
+        descripcion = request.form['descripcion']
+        stock = request.form['stock']
+        precio = request.form['precio']
+        imagen = request.files['imagen']
+
+        cur = cursor()
+        cur.execute('''INSERT INTO producto(nombre, sku, descripcion, stock, precio, imagen) VALUES ("%s", "%s", "%s", "%s", "%s", "%s")'''%(nombre, sku, descripcion, stock, precio, imagen))
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect('/')
+    else:
+        return render_template('registro_producto.html')
+
 
 # ------------- Sistema de Usuarios -------------
 
@@ -92,10 +107,10 @@ def login():
         cur = cursor()
         cur.execute('''SELECT * FROM usuario WHERE pass="%s" AND email="%s"'''%(password, email))
         usuario = cur.fetchone()
+        cur.close()
 
         print("-------------------- USUARIO ---------------")
         print(usuario)
-        
         
         if usuario == None:
             print('entramo al correo invalido pippin')

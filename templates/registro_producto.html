@@ -27,38 +27,30 @@
                                 <h6 class="h5 mb-0">Bienvenido</h6>
                                 <p class="text-muted mt-2 mb-5">Ingresa la información del producto a registrar</p>
 
-                                <form action="/add_products" method="post">
-                                    <div class="form-group">
-                                        <label for="InputBrand">Marca</label>
-                                        <input type="text" class="form-control" id="input_brand">
-                                    </div>
+                                <form enctype="multipart/form-data" method="post">
                                     <div class="form-group">
                                         <label for="InputProductName">Nombre</label>
-                                        <input type="Text" class="form-control" id="input_productName">
+                                        <input name='nombre' type="Text" class="form-control" id="input_productName">
                                     </div>
                                     <div class="form-group">
                                         <label for="InputSKU">SKU</label>
-                                        <input type="text" class="form-control" id="input_sku">
-                                    </div>
-                                    <div class="form-group mb-5">
-                                        <label for="InputCodebar">Codigo de barra</label>
-                                        <input type="Text" class="form-control" id="input_codebar">
+                                        <input name='sku' type="text" class="form-control" id="input_sku">
                                     </div>
                                     <div class="form-group">
                                         <label for="InputDescription">Descripción</label>
-                                        <input type="text" class="form-control" id="input_description">
+                                        <input name='descripcion' type="text" class="form-control" id="input_description">
                                     </div>
                                     <div class="form-group mb-5">
                                         <label for="InputStock">Cantidad en stock</label>
-                                        <input type="Text" class="form-control" id="input_stock">
+                                        <input name='stock' type="Text" class="form-control" id="input_stock">
                                     </div>
                                     <div class="form-group mb-5">
                                         <label for="InputPrice">Precio</label>
-                                        <input type="Text" class="form-control" id="input_price">
+                                        <input name='precio' type="Text" class="form-control" id="input_price">
                                     </div>
                                     <div class="form-group mb-5">
                                         <label for="InputImage">Imagen (PNG)</label>
-                                        <input type="Image"  id="input_image" src>
+                                        <input name='imagen' type="file"  id="input_image" src>
                                     </div>
                                     <button type="submit" class="btn btn-theme">Registrar</button>
                                     <!--<a href="#l" class="forgot-link float-right text-primary">Forgot password?</a>-->
