@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 from asyncio.windows_events import NULL
 from base64 import b64encode, b64decode
-=======
-# from asyncio.windows_events import NULL
->>>>>>> f07f7f6e3b43057ab6bed10c5cb8f1d854de2f64
 import datetime
 from crypt import methods
 
@@ -15,27 +11,11 @@ import json
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
-<<<<<<< HEAD
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'db_nara'
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
-=======
-# TODO change db to heroku
-
-# app.config['MYSQL_HOST'] = 'localhost'
-# app.config['MYSQL_USER'] = 'root'
-# app.config['MYSQL_PASSWORD'] = '1234'
-# app.config['MYSQL_DB'] = 'db_nara'
-
-app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
-app.config['MYSQL_USER'] = 'b7e3a09e061e12'
-app.config['MYSQL_PASSWORD'] = '2f9d3cc1'
-app.config['MYSQL_DB'] = 'heroku_d02c1597b242410'
-
-
->>>>>>> f07f7f6e3b43057ab6bed10c5cb8f1d854de2f64
 mysql = MySQL(app)
 
 # ----------- FUNCIONES --------------
