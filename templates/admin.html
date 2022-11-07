@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+	html,
+body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	background: linear-gradient(45deg, #49a09d, #5f2c82);
+	font-family: sans-serif;
+	font-weight: 100;
+}
+
+.container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+table {
+	width: 800px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+th,
+td {
+	padding: 15px;
+	background-color: rgba(255,255,255,0.2);
+	color: #fff;
+}
+
+th {
+	text-align: left;
+}
+
+thead {
+	th {
+		background-color: #55608f;
+	}
+}
+
+tbody {
+	tr {
+		&:hover {
+			background-color: rgba(255,255,255,0.3);
+		}
+	}
+	td {
+		position: relative;
+		&:hover {
+			&:before {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: -9999px;
+				bottom: -9999px;
+				background-color: rgba(255,255,255,0.2);
+				z-index: -1;
+			}
+		}
+	}
+}
+</style>
+
+    <title>Panel de administrador</title>
+</head>
+<body>
+<!--
+TODO: cambien el pinche tema de esta mamada si tienen chance, esta dlv
+TODO: agregar iconos en vez de texto eliminar y mod
+-->
+
+        {% include 'navigation_bar.html' %}
+<div class="container">
+	<table>
+		<thead>
+			<tr>
+				<th>Product ID</th>
+				<th>Nombre</th>
+				<th>SKU</th>
+				<th>Descripcion</th>
+				<th>Stock</th>
+                <th>Precio</th>
+                <th>Modificar</th>
+                <th>Eliminar</th>
+			</tr>
+		</thead>
+		<tbody>
+            {% for d in data %}
+                <tr>
+                    <td>{{ d.0 }}</td>
+                    <td>{{ d.1 }}</td>
+                    <td>{{ d.2 }}</td>
+                    <td>{{ d.3 }}</td>
+                    <td>{{ d.4 }}</td>
+                    <td>{{ d.5 }}</td>
+                    <td><a href="/mod_prod/{{ d.0 }}">Modificar</a></td>
+                    <td><a href="/del_prod/{{ d.0 }}">Eliminar</a></td>
+                </tr>
+            {% endfor %}
+		</tbody>
+	</table>
+</div>
+
+</body>
+</html>

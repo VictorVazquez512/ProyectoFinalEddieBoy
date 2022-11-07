@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-from asyncio.windows_events import NULL
-from base64 import b64encode, b64decode
-=======
 # from asyncio.windows_events import NULL
->>>>>>> f07f7f6e3b43057ab6bed10c5cb8f1d854de2f64
 import datetime
 from crypt import methods
 
@@ -15,13 +10,6 @@ import json
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
-<<<<<<< HEAD
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1234'
-app.config['MYSQL_DB'] = 'db_nara'
-app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
-=======
 # TODO change db to heroku
 
 # app.config['MYSQL_HOST'] = 'localhost'
@@ -35,7 +23,6 @@ app.config['MYSQL_PASSWORD'] = '2f9d3cc1'
 app.config['MYSQL_DB'] = 'heroku_d02c1597b242410'
 
 
->>>>>>> f07f7f6e3b43057ab6bed10c5cb8f1d854de2f64
 mysql = MySQL(app)
 
 # ----------- FUNCIONES --------------
@@ -48,19 +35,8 @@ def cursor():
 
 #home page
 @app.route("/")
-def index():
-    # Recabamos lista de productos
-    cur = cursor()
-    cur.execute('''SELECT * FROM producto LIMIT 16''')
-    lista_articulos_tupla = cur.fetchall()
-    lista_articulos = []
-    print(lista_articulos_tupla)
-    for articulo in lista_articulos_tupla:
-        lista_articulos.append(list(articulo))
-    #for articulo in lista_articulos:
-    #    articulo[6] = b64encode(articulo[6])
-    print(lista_articulos)
-    return render_template("index.html", lista_articulos = lista_articulos)
+def index(): #index o root o home page
+    return render_template("index.html")
 
 @app.route("/admin")
 def admin():
@@ -119,10 +95,10 @@ def registro_producto():
         descripcion = request.form['descripcion']
         stock = request.form['stock']
         precio = request.form['precio']
-        imagen = request.files['imagen'].read()
-        imagenb64 = b64encode(imagen)
+        imagen = request.files['imagen']
+
         cur = cursor()
-        cur.execute('INSERT INTO producto(nombre, sku, descripcion, stock, precio, imagen) VALUES (%s, %s, %s, %s, %s, %s)', (nombre, sku, descripcion, stock, precio, imagenb64))
+        cur.execute('''INSERT INTO producto(nombre, sku, descripcion, stock, precio, imagen) VALUES ("%s", "%s", "%s", "%s", "%s", "%s")'''%(nombre, sku, descripcion, stock, precio, imagen))
         mysql.connection.commit()
         cur.close()
 
