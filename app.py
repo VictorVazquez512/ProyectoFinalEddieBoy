@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from base64 import b64encode, b64decode
 import datetime
 from flask import Flask, render_template, request, session
 from werkzeug.utils import redirect
@@ -12,7 +13,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'db_nara'
-
+app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 mysql = MySQL(app)
 
 # ----------- FUNCIONES --------------
@@ -25,8 +26,19 @@ def cursor():
 
 #home page
 @app.route("/")
-def index(): #index o root o home page
-    return render_template("index.html")
+def index():
+    # Recabamos lista de productos
+    cur = cursor()
+    cur.execute('''SELECT * FROM producto LIMIT 16''')
+    lista_articulos_tupla = cur.fetchall()
+    lista_articulos = []
+    print(lista_articulos_tupla)
+    for articulo in lista_articulos_tupla:
+        lista_articulos.append(list(articulo))
+    #for articulo in lista_articulos:
+    #    articulo[6] = b64encode(articulo[6])
+    print(lista_articulos)
+    return render_template("index.html", lista_articulos = lista_articulos)
 
 # not founded page
 @app.route('/item',methods=['GET','POST'])
@@ -41,10 +53,10 @@ def registro_producto():
         descripcion = request.form['descripcion']
         stock = request.form['stock']
         precio = request.form['precio']
-        imagen = request.files['imagen']
-
+        imagen = request.files['imagen'].read()
+        imagenb64 = b64encode(imagen)
         cur = cursor()
-        cur.execute('''INSERT INTO producto(nombre, sku, descripcion, stock, precio, imagen) VALUES ("%s", "%s", "%s", "%s", "%s", "%s")'''%(nombre, sku, descripcion, stock, precio, imagen))
+        cur.execute('INSERT INTO producto(nombre, sku, descripcion, stock, precio, imagen) VALUES (%s, %s, %s, %s, %s, %s)', (nombre, sku, descripcion, stock, precio, imagenb64))
         mysql.connection.commit()
         cur.close()
 
