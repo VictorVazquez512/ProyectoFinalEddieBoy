@@ -33,14 +33,14 @@
                         <div class="col mb-5">
                             <div class="card h-100">
                                 <!-- Product image-->
-                                <a href="/item"><img class="card-img-top" src="data:image/jpg;base64, {{ articulo[6].decode('ascii') }}" alt="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" /></a>
+                                <a href="/item/{{ articulo[0]}}"><img class="card-img-top" src="data:image/jpg;base64, {{ articulo[6].decode('ascii') }}" alt="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" /></a>
                                 <!-- Product details-->
                                 <div class="card-body p-4">
                                     <div class="text-center">
                                         <!-- Product name-->
-                                        <h5 class="fw-bolder">{{ articulo[1] }}</h5>
+                                        <a href="/item/{{ articulo[0] }}"><h5 class="fw-bolder">{{ articulo[1] }}</h5></a>
                                         <!-- Product price-->
-                                        <span>{{ articulo[5] }}</span>
+                                        <span>${{ articulo[5] }}</span>
                                     </div>
                                 </div>
                                 <!-- Product actions-->

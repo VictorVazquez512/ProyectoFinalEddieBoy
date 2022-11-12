@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+{% include 'anothernav.html' %}
+<table>
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Pass</th>
+        <th>Crear admin</th>
+        <th>Eliminar usuario</th>
+    </tr>
+    {% for r in regular %}
+    <tr>
+        <td>{{ r[1] }}</td>
+        <td>{{ r[2] }}</td>
+        <td><a href="/admin/prom/<{{ r[0] }}>">Promover</a></td>
+        <td><a href="/admin/elim/<{{ r[0] }}>">Eliminar</a></td>
+    </tr>
+    {% endfor %}
+    </thead>
+</table>
+<table>
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Pass</th>
+        <th>Bajar admin</th>
+        <th>Eliminar usuario</th>
+    </tr>
+    {% for a in admin %}
+    <tr>
+        <td>{{ a[1] }}</td>
+        <td>{{ a[2] }}</td>
+        <td><a href="/admin/demo/<{{ a[0] }}>">Bajar</a></td>
+        <td><a href="/admin/elim/<{{ a[0] }}>">Eliminar</a></td>
+    </tr>
+    {% endfor %}
+    </thead>
+</table>
+</body>
+</html>
