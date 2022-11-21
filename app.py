@@ -298,6 +298,7 @@ def logout():
 #-------------CARRITO-----------------
 @app.route('/carrito',methods=["GET","POST"])
 def carrito():
+    return render_template("cart.html")
     error=None
     
 

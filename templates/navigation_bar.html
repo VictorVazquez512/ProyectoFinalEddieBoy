@@ -6,31 +6,31 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#!">Acerca de</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tienda</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">All Products</a></li>
+                        <li><a class="dropdown-item" href="#!">Todos los productos</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                        <li><a class="dropdown-item" href="#!">Productos populares</a></li>
+                        <li><a class="dropdown-item" href="#!">Nuevos productos</a></li>
                     </ul>
                 </li>
                 <li class="nav-item"><a class="nav-link" aria-current="page" href="/registro_producto">Registrar Producto</a></li>
                 
                     {% if nombre=="" %}
-                    <li class="nav-item"><a class="nav-link" href="/registro_cliente">Sign Up Now!</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/login">Log in</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/registro_cliente">Registrate ahora!</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">Inicia Sesion</a></li>
                     {% else %}
                     <li class="nav-item"><a class="nav-link" href="/">{{nombre}}</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Cerrar Sesion</a></li>
                     {% endif %}
                 
             </ul>
-            <form class="d-flex" method="post">
+            <!--porque no cala el enlace-->
+            <form class="d-flex" method="post" href="/carrito">
                 <button class="btn btn-outline-dark" type="submit">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
+                    <i class="bi-cart-fill me-1">Cart</i>
                     <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                 </button>
             </form>
