@@ -6,8 +6,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/registro_cliente">Sign Up Now!</a></li>
-                <li class="nav-item"><a class="nav-link" href="/login">Log in</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
@@ -19,8 +17,17 @@
                     </ul>
                 </li>
                 <li class="nav-item"><a class="nav-link" aria-current="page" href="/registro_producto">Registrar Producto</a></li>
+                
+                    {% if nombre=="" %}
+                    <li class="nav-item"><a class="nav-link" href="/registro_cliente">Sign Up Now!</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">Log in</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="/">{{nombre}}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    {% endif %}
+                
             </ul>
-            <form class="d-flex">
+            <form class="d-flex" method="post">
                 <button class="btn btn-outline-dark" type="submit">
                     <i class="bi-cart-fill me-1"></i>
                     Cart

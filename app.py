@@ -1,6 +1,6 @@
 from base64 import b64encode, b64decode
 import datetime
-from crypt import methods
+#from crypt import methods
 
 from flask import Flask, render_template, request, session, url_for
 from werkzeug.utils import redirect
@@ -28,20 +28,31 @@ def cursor():
 # ------------- ROUTES ---------------
 
 #home page
-@app.route("/")
+@app.route("/", methods=['GET','POST'])
 def index():
     # Recabamos lista de productos
     cur = cursor()
+    nombreC=""
+    if 'nombreCliente' in session:
+        print(session['nombreCliente'])
+        nombreC = session['nombreCliente']
+        pass
     cur.execute('''SELECT * FROM producto LIMIT 16''')
     lista_articulos_tupla = cur.fetchall()
     lista_articulos = []
-    print(lista_articulos_tupla)
+    #print(lista_articulos_tupla)
     for articulo in lista_articulos_tupla:
         lista_articulos.append(list(articulo))
     #for articulo in lista_articulos:
     #    articulo[6] = b64encode(articulo[6])
-    print(lista_articulos)
-    return render_template("index.html", lista_articulos = lista_articulos)
+    #print(lista_articulos)
+    if request.method == 'POST':
+        if 'nombreCliente' in session:
+            print('carrito')
+            return render_template('cart.html')
+        else:
+            return redirect('/')
+    return render_template("index.html", lista_articulos = lista_articulos, nombre = nombreC)
 
 @app.route("/searcher/<producto>", methods = ["GET", "POST"])
 def buscador(prod):
@@ -185,26 +196,45 @@ def registro():
         print(request.form)
 
         # Tratamos el formulario que viene del cliente
+        nombre=request.form['name']
+        apellido=request.form['lastName']
+        direccion=request.form['adress']
+        ciudad = request.form['city']
+        estado = request.form['state']
+        codigoPostal = request.form['zipCode']
+        numCel = request.form['phoneNumber']
         email=request.form['email']
         password=request.form['password']
         confirmarpassword=request.form['ConfirmPassword']
+        idC=0
         # Verificar si existe el email
         cur.execute('''SELECT * FROM usuario WHERE pass="%s" AND email="%s"'''%(password, email))
         usuario = cur.fetchone()
         print(cur)
         print(usuario)
-        if usuario == NULL:
+        if usuario != None:
             return render_template('/registro_cliente.html', error="El correo electronico ya existe.")
         if password!=confirmarpassword:
             return render_template('/registro_cliente.html', error="Las passwords no coinciden")
         else:
-            cur.execute('''INSERT INTO usuario(email, pass, tipo) VALUES ("%s", "%s")'''%(email, password))
+            cur.execute('''INSERT INTO usuario(email, pass) VALUES ("%s", "%s")'''%(email, password))
+            cur.execute('''SELECT max(id) from clientes''')
+            idcliente=cur.fetchone()
+            print(idcliente)
+            if idcliente[0]==None:
+                idC = 0
+            else:
+                idC = idcliente[0]+1
+                
+            cur.execute('''INSERT INTO clientes(id,nombre,apellido,direccion,ciudad,estado,codigoPost,numCel,email) VALUES(%s,"%s","%s","%s","%s","%s","%s",%s,"%s")'''%(idC,nombre,apellido,direccion,ciudad,estado,codigoPostal,numCel,email))
             # borre lo del tipo, la db ya tiene por default agregar users como clientes para no andar batallando
             cur.execute('''SELECT * FROM usuario WHERE pass="%s" AND email="%s"'''%(password, email))
             usuario = cur.fetchone()
             session['idUsuario'] = usuario[0]
             session['email'] = usuario[1]
-
+            cur.execute('''SELECT * FROM clientes WHERE email="%s"'''%(session['email']))
+            session['nombreCliente']=cur.fetchone()[8]
+            print(session['nombreCliente'])
             mysql.connection.commit()
             cur.close()
 
@@ -229,6 +259,7 @@ def login():
         cur = cursor()
         cur.execute('''SELECT * FROM usuario WHERE pass="%s" AND email="%s"'''%(password, email))
         usuario = cur.fetchone()
+        
         cur.close()
 
         print("-------------------- USUARIO ---------------")
@@ -243,6 +274,10 @@ def login():
                 session['email']=email
                 session['idUsuario']=usuario[0]
                 session['tipo']=usuario[3]
+                cur=cursor()
+                cur.execute('''SELECT * FROM clientes where email="%s"'''%(email))
+                session['nombreCliente']=cur.fetchone()[1]
+                cur.close()
                 if usuario[3] == 'admin':
                     return redirect('/admin')
                 return redirect('/')
@@ -252,6 +287,17 @@ def login():
             return render_template('login.html',error="Correo o password contraseña")
     return render_template('login.html')
 
+@app.route("/logout")
+def logout():
+    error=None
+    session.pop("nombreCliente")
+    return redirect('/')
+
+#-------------CARRITO-----------------
+@app.route('/carrito',methods=["GET","POST"])
+def carrito():
+    error=None
+    
 
 @app.errorhandler(404)
 def page_not_found(errorhandler):
