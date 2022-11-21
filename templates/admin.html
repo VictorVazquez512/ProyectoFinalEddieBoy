@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
           <link href="/static/css/bootstrap.css" rel="stylesheet" />
+          <link href="/static/css/headerAdm.css" rel="stylesheet" />
 
     <title>Panel de administrador</title>
 </head>
@@ -16,7 +17,7 @@ TODO: agregar iconos en vez de texto eliminar y mod
 
         {% include 'anothernav.html' %}
 
-<div class="container">
+<div class="contenedor">
 	<table>
 		<thead>
 			<tr>
@@ -32,7 +33,8 @@ TODO: agregar iconos en vez de texto eliminar y mod
 		</thead>
 		<tbody>
             {% for d in data %}
-                <tr>
+            {% if (loop.index%2)==0%}
+                <tr style="background-color: #F6F6F6;">
                     <td>{{ d.0 }}</td>
                     <td>{{ d.1 }}</td>
                     <td>{{ d.2 }}</td>
@@ -42,6 +44,18 @@ TODO: agregar iconos en vez de texto eliminar y mod
                     <td><a href="/admin/mod_prod/{{ d.0 }}">Modificar</a></td>
                     <td><a href="/admin/del_prod/{{ d.0 }}">Eliminar</a></td>
                 </tr>
+            {% else %}
+            <tr style="background-color: white;">
+                <td>{{ d.0 }}</td>
+                <td>{{ d.1 }}</td>
+                <td>{{ d.2 }}</td>
+                <td>{{ d.3 }}</td>
+                <td>{{ d.4 }}</td>
+                <td>{{ d.5 }}</td>
+                <td><a href="/admin/mod_prod/{{ d.0 }}">Modificar</a></td>
+                <td><a href="/admin/del_prod/{{ d.0 }}">Eliminar</a></td>
+            </tr>
+            {% endif %}
             {% endfor %}
 		</tbody>
 	</table>

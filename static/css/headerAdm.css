@@ -1,0 +1,14 @@
+table{
+    margin-top: 20px;
+}
+td,th{
+    padding-right: 40px;
+    padding-left:40px;
+}
+.contenedor{
+    display: grid;
+  place-content: center;
+}
+thead{
+    background-color: lightgray;
+}
