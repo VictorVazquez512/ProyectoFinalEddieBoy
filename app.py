@@ -275,11 +275,13 @@ def login():
                 session['idUsuario']=usuario[0]
                 session['tipo']=usuario[3]
                 cur=cursor()
-                cur.execute('''SELECT * FROM clientes where email="%s"'''%(email))
-                session['nombreCliente']=cur.fetchone()[1]
-                cur.close()
                 if usuario[3] == 'admin':
                     return redirect('/admin')
+                else:
+                    cur.execute('''SELECT * FROM clientes where email="%s"'''%(email))
+                    session['nombreCliente']=cur.fetchone()[1]
+                    cur.close()
+                    
                 return redirect('/')
             else:
                 return render_template('login.html',error="Correo o password contraseña")     
