@@ -49,7 +49,7 @@ def index():
     if request.method == 'POST':
         if 'nombreCliente' in session:
             print('carrito')
-            return render_template('cart.html')
+            return redirect('/carrito')
         else:
             return redirect('/')
     return render_template("index.html", lista_articulos = lista_articulos, nombre = nombreC)
@@ -279,7 +279,9 @@ def login():
                     return redirect('/admin')
                 else:
                     cur.execute('''SELECT * FROM clientes where email="%s"'''%(email))
-                    session['nombreCliente']=cur.fetchone()[1]
+                    cliente=cur.fetchone()
+                    session['nombreCliente']=cliente[1]
+                    session['idCliente']=cliente[0]
                     cur.close()
                     
                 return redirect('/')
@@ -298,9 +300,68 @@ def logout():
 #-------------CARRITO-----------------
 @app.route('/carrito',methods=["GET","POST"])
 def carrito():
-    return render_template("cart.html")
-    error=None
+    nombreC=""
+    if 'nombreCliente' in session:
+        cur = cursor()
+        cur.execute('''SELECT * FROM carrito WHERE idcliente=%s and estado="%s"'''%(session['idCliente'],"en espera"))
+        carrito = cur.fetchall()
+        print(carrito)
+        products = list()
+        subtotal=0
+        count=0
+        for lista in carrito:
+            count+=1
+            cur.execute('''SELECT * FROM producto WHERE idProducto=%s'''%(lista[1]))
+            producto=list(cur.fetchone())
+            producto.append(lista[3])#subtotal
+            producto.append(lista[4])#cantidad
+            products.append(producto)
+            subtotal+=lista[3]
+        cur.close()
+        
+        nombreC=session['nombreCliente']
+    return render_template("cart.html",nombre = nombreC, productos=products, sub=subtotal, contador = count)
+
+#-----------comprar carrito------------
+@app.route('/comprarCarrito')
+def comprar():
+    cur = cursor()
+    cur.execute('''SELECT * FROM carrito WHERE idcliente=%s and estado="%s"'''%(session['idCliente'],"en espera"))
+    carrito = cur.fetchall()
     
+    for producto in carrito:
+        cur.execute('''SELECT precio from producto where idproducto=%s'''%(producto[1]))
+        cant=cur.fetchone()[0]-producto[4]
+        cur.execute('''UPDATE producto SET stock=%s where idproducto=%s'''%(cant,producto[1]))
+        cur.execute('''UPDATE carrito SET estado="concluido" where idcliente=%s and idproducto=%s and estado="en espera"'''%(session['idCliente'],producto[1]))
+    mysql.connection.commit()
+    cur.close()
+    return redirect('/')
+    
+@app.route('/añadirCarrito/<id>',methods=['GET','POST'])
+def añadirCarrito(id):
+    if 'nombreCliente' in session:
+        print(id)
+        cur = cursor()
+        cant=0
+        cur.execute('''SELECT * FROM producto where idproducto=%s'''%(id))
+        producto=cur.fetchone()
+        cur.execute('''SELECT * FROM carrito where idcliente=%s and estado="en espera" and idproducto=%s'''%(session['idCliente'],id))
+        productInCar = cur.fetchone()
+        if productInCar==None:
+            subtotal = 1*producto[5]
+            cur.execute('''INSERT INTO carrito VALUES(%s,%s,"en espera",%s,1) '''%(session['idCliente'],id,subtotal))
+            mysql.connection.commit()
+            cur.close()
+        else:
+            cant=productInCar[4]+1
+            subtotal=cant*producto[5]
+            cur.execute('''UPDATE carrito SET cantidad=%s, subtotal=%s where idcliente=%s and estado="en espera" and idproducto=%s'''%(cant,subtotal,session['idCliente'],id))
+            mysql.connection.commit()
+            cur.close()
+        return redirect('/')
+    #print(producto)
+    return redirect('/')
 
 @app.errorhandler(404)
 def page_not_found(errorhandler):
