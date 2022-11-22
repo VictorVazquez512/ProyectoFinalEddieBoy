@@ -67,9 +67,9 @@ def buscador(prod):
         lista_articulos.append(list(a))
     print(lista_articulos)
     return render_template("index.html", lista = lista_articulos)
-@app.route("/admin")
-def admin():
-    if request.method == 'GET':
+@app.route("/admin", methods=['GET','POST'])
+def adminN():
+    
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM producto')
         data = cur.fetchall()
@@ -106,7 +106,7 @@ def mod_produ():
         cur = mysql.connection.cursor()
         cur.execute(query,val)
         mysql.connection.commit()
-        return redirect(url_for('/admin'))
+        return redirect("/admin")
 
 @app.route('/admin/usuarios', methods=['GET', 'POST'])
 def usuarios():
@@ -125,7 +125,7 @@ def admin_prom(id):
     val = ("admin", id)
     cursor.execute(query, val)
     mysql.connection.commit()
-    return redirect(url_for('/admin/usuarios'))
+    return redirect('/admin/usuarios')
 @app.route("/admin/demo/<id>")
 def demot_prom(id):
     cursor = mysql.connection.cursor()
@@ -133,7 +133,7 @@ def demot_prom(id):
     val = ("cliente",id)
     cursor.execute(query, val)
     mysql.connection.commit()
-    return redirect(url_for('/admin/usuarios'))
+    return redirect('/admin/usuarios')
 @app.route("/admin/elim/<id>")
 def elim_user(id):
     cursor = mysql.connection.cursor()
@@ -141,15 +141,15 @@ def elim_user(id):
     val = (id)
     cursor.execute(query, val)
     mysql.connection.commit()
-    return redirect(url_for('/admin/usuarios'))
+    return redirect('/admin/usuarios')
 @app.route('/admin/del_prod/<id>', methods =["GET","POST"])
 def del_prod(id):
-    query = "DELETE FROM productos WHERE idProducto = '" + id + "'"
+    query = "DELETE FROM producto WHERE idProducto = '" + id + "'"
     cur = mysql.connection.cursor()
     cur.execute(query)
     mysql.connection.commit()
     # codigo de schrodinger, puede que jale, puede que no
-    return redirect(url_for('/admin'))
+    return redirect('/admin')
 
 @app.route('/item/<id>',methods=['GET','POST'])
 def item(id): #item page
@@ -180,7 +180,7 @@ def registro_producto():
         mysql.connection.commit()
         cur.close()
 
-        return redirect('/')
+        return redirect('/admin')
     else:
         return render_template('registro_producto.html')
 
