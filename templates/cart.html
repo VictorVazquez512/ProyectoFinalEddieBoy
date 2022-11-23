@@ -78,16 +78,16 @@
                             <h6 class="text-black mb-0">{{producto[1]}}</h6>
                           </div>
                           <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                            <button class="btn btn-link px-2"
-                              onclick="this.parentNode.querySelector('input[type=number]').stepDown()" disabled>
+                            <button class="btn btn-link px-2" accion="restar" id="boton_resta" precio="{{producto[5]}}"
+                              onclick="
+                              ">
                               <i class="fas fa-minus"></i>
                             </button>
       
-                            <input id="form1" min="0" name="quantity" value="{{producto[8]}}" type="number"
-                              class="tamaño form-control-sm" disabled/>
+                            <input id="form1" min="0" name="quantity" type="number"
+                              class="tamaño form-control-sm" value="{{producto[8]}}" disabled/>
       
-                            <button class="btn btn-link px-2"
-                              onclick="this.parentNode.querySelector('input[type=number]').stepUp()" disabled>
+                            <button class="btn btn-link px-2" accion="sumar" id="boton_suma" precio="{{producto[5]}}">
                               <i class="fas fa-plus"></i>
                             </button>
                           </div>
@@ -114,22 +114,6 @@
                         <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
                         <hr class="my-4">
       
-                        <div class="d-flex justify-content-between mb-4">
-                          
-                          <h5>${{sub}}</h5>
-                        </div>
-      
-                        <h5 class="text-uppercase mb-3">Shipping</h5>
-      
-                        <div class="mb-4 pb-2">
-                          <select class="select">
-                            <option value="1">Standard-Delivery- €5.00</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                            <option value="4">Four</option>
-                          </select>
-                        </div>
-      
                         <h5 class="text-uppercase mb-3">Give code</h5>
       
                         <div class="mb-5">
@@ -143,7 +127,7 @@
       
                         <div class="d-flex justify-content-between mb-5">
                           <h5 class="text-uppercase">Total price</h5>
-                          <h5>${{sub}}</h5>
+                          <h5 id="total_actual">${{sub}}</h5>
                         </div>
                         {% if contador == 0 %}
                         <button class="btn btn-outline-light btn-lg px-5 " type="submit" disabled><a href="/comprarCarrito" class="links">Comprar</a></button>
@@ -160,6 +144,41 @@
         </div>
       </section>
     
-      <script src='https://code.jquery.com/jquery-3.6.1.min.js' type='text/javascript'/>
+      <script src='https://code.jquery.com/jquery-3.6.1.min.js' type='text/javascript'></script>
+      <script>
+        $(document).ready(function(){
+          
+          $("[accion='restar']").click(function () {
+            let input_cantidad = this.parentNode.querySelector('input[type=number]')
+            if(parseFloat(input_cantidad.value) > 1){
+              let precio = parseFloat($(this).attr("precio"))
+              let total_actual = parseFloat($('#total_actual').text().substring(1))
+              let input_total_producto = this.parentNode.parentNode.querySelector('[class="col-md-3 col-lg-2 col-xl-2 offset-lg-1"]').querySelector('[class=mb-0]')
+              let total_actual_producto = (parseFloat(input_total_producto.innerHTML.substring(1)) - precio).toFixed(1)
+              let total = parseFloat(total_actual - precio).toFixed(1)
+
+              $("#total_actual").html("$"+total)
+              input_total_producto.innerHTML = "$"+total_actual_producto
+              input_cantidad.stepDown()
+
+            }
+          });
+
+          $("[accion='sumar']").click(function () {
+            let precio = parseFloat($(this).attr("precio"))
+            let total_actual = parseFloat($('#total_actual').text().substring(1))
+            let input_cantidad = this.parentNode.querySelector('input[type=number]')
+            let input_total_producto = this.parentNode.parentNode.querySelector('[class="col-md-3 col-lg-2 col-xl-2 offset-lg-1"]').querySelector('[class=mb-0]')
+            let total_actual_producto = (parseFloat(input_total_producto.innerHTML.substring(1)) + precio).toFixed(1)
+            let total = parseFloat(total_actual + precio).toFixed(1)
+
+            $("#total_actual").html("$"+total)
+            input_total_producto.innerHTML = "$"+total_actual_producto
+            input_cantidad.stepUp()
+
+          });
+      })
+      </script>
+
 </body>
 </html>

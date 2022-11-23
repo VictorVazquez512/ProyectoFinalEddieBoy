@@ -226,7 +226,7 @@ def registro():
             else:
                 idC = idcliente[0]+1
                 
-            cur.execute('''INSERT INTO clientes(id,nombre,apellido,direccion,ciudad,estado,codigoPost,numCel,email) VALUES(%s,"%s","%s","%s","%s","%s","%s",%s,"%s")'''%(idC,nombre,apellido,direccion,ciudad,estado,codigoPostal,numCel,email))
+            cur.execute('''INSERT INTO clientes(id,nombre,apellido,direccion,ciudad,estado,codigoPost,numCel,email) VALUES("%s","%s","%s","%s","%s","%s","%s","%s","%s")'''%(idC,nombre,apellido,direccion,ciudad,estado,codigoPostal,numCel,email))
             # borre lo del tipo, la db ya tiene por default agregar users como clientes para no andar batallando
             cur.execute('''SELECT * FROM usuario WHERE pass="%s" AND email="%s"'''%(password, email))
             usuario = cur.fetchone()
