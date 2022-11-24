@@ -154,9 +154,9 @@ def del_prod(id):
 @app.route('/item/<id>',methods=['GET','POST'])
 def item(id): #item page
     cur = mysql.connection.cursor()
-    query = "SELECT * FROM producto WHERE idProducto = %s"
-    val = (id)
-    cur.execute(query,val)
+    """ query = "SELECT * FROM producto WHERE idProducto = %s"
+    val = (id) """
+    cur.execute('''SELECT * FROM producto WHERE idProducto = %s'''%(id))
     data = cur.fetchall()
 
     query = "SELECT * FROM producto LIMIT 4"
